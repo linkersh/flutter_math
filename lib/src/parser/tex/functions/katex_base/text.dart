@@ -26,7 +26,7 @@ part of katex_base;
 const _textEntries = {
   [
     // Font families
-    '\\text', '\\textrm', '\\textsf', '\\texttt', '\\textnormal',
+    '\\text', '\\textrm', '\\textsf', '\\texttt', '\\textnormal', '\\textar',
     // Font weights
     '\\textbf', '\\textmd',
     // Font Shapes

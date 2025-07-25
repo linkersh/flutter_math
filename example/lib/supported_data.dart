@@ -778,6 +778,7 @@ const supportedData = {
     r'\rm Ab0',
     r'\bold{Ab0}',
     r'\textup{Ab0}',
+    r'\textar{Ab0}',
     r'\textnormal{Ab0}',
     r'\boldsymbol{Ab0}',
     r'\Bbb{AB}',

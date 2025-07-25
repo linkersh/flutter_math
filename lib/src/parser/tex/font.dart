@@ -178,4 +178,5 @@ const texTextFontOptions = {
   '\\textmd': PartialFontOptions(fontWeight: FontWeight.normal),
   '\\textit': PartialFontOptions(fontShape: FontStyle.italic),
   '\\textup': PartialFontOptions(fontShape: FontStyle.normal),
+  '\\textar': PartialFontOptions(fontFamily: 'NotoNaskhArabic', fontShape: FontStyle.normal),
 };

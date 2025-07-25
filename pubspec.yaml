@@ -78,3 +78,8 @@ flutter:
     - family: KaTeX_Size4
       fonts:
         - asset: lib/katex_fonts/fonts/KaTeX_Size4-Regular.ttf
+    - family: NotoNaskhArabic
+      fonts:
+        - asset: lib/katex_fonts/fonts/NotoNaskhArabic-Regular.ttf
+        - asset: lib/katex_fonts/fonts/NotoNaskhArabic-Bold.ttf
+          weight: 700
