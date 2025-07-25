@@ -170,6 +170,7 @@ const texMathFontOptions = {
 };
 
 const texTextFontOptions = {
+  '\\text': PartialFontOptions(fontFamily: 'Main'),
   '\\textrm': PartialFontOptions(fontFamily: 'Main'),
   '\\textsf': PartialFontOptions(fontFamily: 'SansSerif'),
   '\\texttt': PartialFontOptions(fontFamily: 'Typewriter'),
