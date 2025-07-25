@@ -43,23 +43,28 @@ GreenNode _textHandler(TexParser parser, FunctionContext context) {
   final fontOptions = texTextFontOptions[context.funcName];
   if (fontOptions == null) return body;
   
-  // For Arabic text, we need special handling
-  if (context.funcName == '\\textar') {
-    return _handleArabicText(body, fontOptions);
+  // Check if the text content contains Arabic characters
+  final children = body.expandEquationRow();
+  final textContent = _extractTextContent(children);
+  
+  if (_containsArabicText(textContent)) {
+    // For any text containing Arabic, use special Arabic text handling
+    // Use Arabic font if not \textar, otherwise use the specified font
+    final arabicFontOptions = context.funcName == '\\textar' 
+        ? fontOptions 
+        : PartialFontOptions(fontFamily: 'NotoNaskhArabic', fontShape: FontStyle.normal);
+    return _handleArabicText(textContent, arabicFontOptions);
   } else {
+    // For non-Arabic text, use regular handling
     return StyleNode(
       optionsDiff: OptionsDiff(textFontOptions: fontOptions),
-      children: body.expandEquationRow(),
+      children: children,
     );
   }
 }
 
 /// Special handler for Arabic text that preserves word structure
-GreenNode _handleArabicText(GreenNode body, PartialFontOptions fontOptions) {
-  // Extract text content from the body
-  final children = body.expandEquationRow();
-  final textContent = _extractTextContent(children);
-  
+GreenNode _handleArabicText(String textContent, PartialFontOptions fontOptions) {
   if (textContent.isNotEmpty) {
     // Create a custom Arabic text node that handles proper shaping
     return StyleNode(
@@ -73,13 +78,13 @@ GreenNode _handleArabicText(GreenNode body, PartialFontOptions fontOptions) {
     );
   }
   
-  // Fallback to regular handling if we can't extract text
+  // Fallback - this shouldn't happen if we got here
   return StyleNode(
     optionsDiff: OptionsDiff(
       textFontOptions: fontOptions,
       textDirection: TextDirection.rtl,
     ),
-    children: children,
+    children: [],
   );
 }
 
@@ -95,6 +100,27 @@ String _extractTextContent(List<GreenNode> nodes) {
     // Could add more node types if needed
   }
   return buffer.toString();
+}
+
+/// Check if text contains Arabic characters
+bool _containsArabicText(String text) {
+  for (int i = 0; i < text.length; i++) {
+    final codeUnit = text.codeUnitAt(i);
+    // Arabic Unicode blocks:
+    // U+0600–U+06FF (Arabic)
+    // U+0750–U+077F (Arabic Supplement)  
+    // U+08A0–U+08FF (Arabic Extended-A)
+    // U+FB50–U+FDFF (Arabic Presentation Forms-A)
+    // U+FE70–U+FEFF (Arabic Presentation Forms-B)
+    if ((codeUnit >= 0x0600 && codeUnit <= 0x06FF) ||
+        (codeUnit >= 0x0750 && codeUnit <= 0x077F) ||
+        (codeUnit >= 0x08A0 && codeUnit <= 0x08FF) ||
+        (codeUnit >= 0xFB50 && codeUnit <= 0xFDFF) ||
+        (codeUnit >= 0xFE70 && codeUnit <= 0xFEFF)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /// Custom node for rendering Arabic text with proper shaping
