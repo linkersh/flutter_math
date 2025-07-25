@@ -130,10 +130,36 @@ BuildResult makeBaseSymbol({
 Widget makeChar(String character, FontOptions font,
     CharacterMetrics? characterMetrics, MathOptions options,
     {bool needItalic = false}) {
-  final charWidget = ResetDimension(
-    height: characterMetrics?.height.cssEm.toLpUnder(options),
-    depth: characterMetrics?.depth.cssEm.toLpUnder(options),
-    child: RichText(
+  
+  // Check if this is Arabic text that needs proper shaping
+  final isArabic = _isArabicText(character);
+  
+  Widget textWidget;
+  
+  if (isArabic) {
+    // For Arabic text, use proper bidirectional text rendering
+    textWidget = Directionality(
+      textDirection: TextDirection.rtl,
+      child: RichText(
+        text: TextSpan(
+          text: character,
+          style: TextStyle(
+            fontFamily: 'packages/flutter_math_fork/KaTeX_${font.fontFamily}',
+            fontWeight: font.fontWeight,
+            fontStyle: font.fontShape,
+            fontSize: 1.0.cssEm.toLpUnder(options),
+            color: options.color,
+          ),
+        ),
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.right,
+        softWrap: false,
+        overflow: TextOverflow.visible,
+      ),
+    );
+  } else {
+    // For non-Arabic text, use RichText as before
+    textWidget = RichText(
       text: TextSpan(
         text: character,
         style: TextStyle(
@@ -147,8 +173,15 @@ Widget makeChar(String character, FontOptions font,
       textDirection: options.textDirection,
       softWrap: false,
       overflow: TextOverflow.visible,
-    ),
+    );
+  }
+  
+  final charWidget = ResetDimension(
+    height: characterMetrics?.height.cssEm.toLpUnder(options),
+    depth: characterMetrics?.depth.cssEm.toLpUnder(options),
+    child: textWidget,
   );
+  
   if (needItalic) {
     final italic = characterMetrics?.italic.cssEm.toLpUnder(options) ?? 0.0;
     return Padding(
@@ -157,6 +190,27 @@ Widget makeChar(String character, FontOptions font,
     );
   }
   return charWidget;
+}
+
+/// Helper function to detect Arabic text
+bool _isArabicText(String text) {
+  for (int i = 0; i < text.length; i++) {
+    final codeUnit = text.codeUnitAt(i);
+    // Arabic Unicode blocks:
+    // U+0600–U+06FF (Arabic)
+    // U+0750–U+077F (Arabic Supplement)  
+    // U+08A0–U+08FF (Arabic Extended-A)
+    // U+FB50–U+FDFF (Arabic Presentation Forms-A)
+    // U+FE70–U+FEFF (Arabic Presentation Forms-B)
+    if ((codeUnit >= 0x0600 && codeUnit <= 0x06FF) ||
+        (codeUnit >= 0x0750 && codeUnit <= 0x077F) ||
+        (codeUnit >= 0x08A0 && codeUnit <= 0x08FF) ||
+        (codeUnit >= 0xFB50 && codeUnit <= 0xFDFF) ||
+        (codeUnit >= 0xFE70 && codeUnit <= 0xFEFF)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 CharacterMetrics? lookupChar(String char, FontOptions font, Mode mode) =>

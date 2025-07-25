@@ -43,20 +43,114 @@ GreenNode _textHandler(TexParser parser, FunctionContext context) {
   final fontOptions = texTextFontOptions[context.funcName];
   if (fontOptions == null) return body;
   
-  // For Arabic text, we need to set RTL text direction
-  OptionsDiff optionsDiff;
+  // For Arabic text, we need special handling
   if (context.funcName == '\\textar') {
-    // For \textar command, explicitly set RTL direction and Arabic font
-    optionsDiff = OptionsDiff(
-      textFontOptions: fontOptions,
-      textDirection: TextDirection.rtl,
-    );
+    return _handleArabicText(body, fontOptions);
   } else {
-    optionsDiff = OptionsDiff(textFontOptions: fontOptions);
+    return StyleNode(
+      optionsDiff: OptionsDiff(textFontOptions: fontOptions),
+      children: body.expandEquationRow(),
+    );
+  }
+}
+
+/// Special handler for Arabic text that preserves word structure
+GreenNode _handleArabicText(GreenNode body, PartialFontOptions fontOptions) {
+  // Extract text content from the body
+  final children = body.expandEquationRow();
+  final textContent = _extractTextContent(children);
+  
+  if (textContent.isNotEmpty) {
+    // Create a custom Arabic text node that handles proper shaping
+    return StyleNode(
+      optionsDiff: OptionsDiff(
+        textFontOptions: fontOptions,
+        textDirection: TextDirection.rtl,
+      ),
+      children: [
+        _ArabicTextNode(text: textContent),
+      ],
+    );
   }
   
+  // Fallback to regular handling if we can't extract text
   return StyleNode(
-    optionsDiff: optionsDiff,
-    children: body.expandEquationRow(),
+    optionsDiff: OptionsDiff(
+      textFontOptions: fontOptions,
+      textDirection: TextDirection.rtl,
+    ),
+    children: children,
   );
+}
+
+/// Extract text content from a list of nodes
+String _extractTextContent(List<GreenNode> nodes) {
+  final buffer = StringBuffer();
+  for (final node in nodes) {
+    if (node is SymbolNode) {
+      buffer.write(node.symbol);
+    } else if (node is SpaceNode) {
+      buffer.write(' ');
+    }
+    // Could add more node types if needed
+  }
+  return buffer.toString();
+}
+
+/// Custom node for rendering Arabic text with proper shaping
+class _ArabicTextNode extends LeafNode {
+  final String text;
+
+  _ArabicTextNode({required this.text});
+
+  @override
+  Mode get mode => Mode.text;
+
+  @override
+  AtomType get leftType => AtomType.ord;
+
+  @override
+  AtomType get rightType => AtomType.ord;
+
+  @override
+  BuildResult buildWidget(
+      MathOptions options, List<BuildResult?> childBuildResults) {
+    return BuildResult(
+      options: options,
+      widget: _buildArabicWidget(options),
+      italic: 0.0,
+      skew: 0.0,
+    );
+  }
+
+  Widget _buildArabicWidget(MathOptions options) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: RichText(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(
+            fontFamily: options.textFontOptions?.fontFamily != null
+                ? 'packages/flutter_math_fork/KaTeX_${options.textFontOptions!.fontFamily}'
+                : 'packages/flutter_math_fork/KaTeX_NotoNaskhArabic',
+            fontWeight: options.textFontOptions?.fontWeight ?? FontWeight.normal,
+            fontStyle: options.textFontOptions?.fontShape ?? FontStyle.normal,
+            fontSize: 1.0.cssEm.toLpUnder(options),
+            color: options.color,
+          ),
+        ),
+        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.right,
+        softWrap: false,
+        overflow: TextOverflow.visible,
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuildWidget(MathOptions oldOptions, MathOptions newOptions) {
+    return oldOptions.textFontOptions != newOptions.textFontOptions ||
+        oldOptions.color != newOptions.color ||
+        oldOptions.fontSize != newOptions.fontSize;
+  }
 }
