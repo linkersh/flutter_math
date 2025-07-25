@@ -70,6 +70,11 @@ class MathOptions {
   /// {@endtemplate}
   final double logicalPpi;
 
+  /// Text direction for rendering text elements.
+  ///
+  /// This is used for proper rendering of RTL languages like Arabic.
+  final TextDirection textDirection;
+
   MathOptions._({
     required this.fontSize,
     required this.logicalPpi,
@@ -78,6 +83,7 @@ class MathOptions {
     this.sizeUnderTextStyle = MathSize.normalsize,
     this.textFontOptions,
     this.mathFontOptions,
+    this.textDirection = TextDirection.ltr,
     // required this.maxSize,
     // required this.minRuleThickness,
   });
@@ -97,6 +103,7 @@ class MathOptions {
     FontOptions? mathFontOptions,
     double? fontSize,
     double? logicalPpi,
+    TextDirection textDirection = TextDirection.ltr,
     // required this.maxSize,
     // required this.minRuleThickness,
   }) {
@@ -114,6 +121,7 @@ class MathOptions {
       sizeUnderTextStyle: sizeUnderTextStyle,
       mathFontOptions: mathFontOptions,
       textFontOptions: textFontOptions,
+      textDirection: textDirection,
     );
   }
 
@@ -150,6 +158,7 @@ class MathOptions {
     fontSize: defaultFontSize,
     logicalPpi: defaultLogicalPpi,
     style: MathStyle.display,
+    textDirection: TextDirection.ltr,
   );
 
   /// Default options for in-line equations
@@ -157,6 +166,7 @@ class MathOptions {
     fontSize: defaultFontSize,
     logicalPpi: defaultLogicalPpi,
     style: MathStyle.text,
+    textDirection: TextDirection.ltr,
   );
 
   /// Returns [MathOptions] with given [MathStyle]
@@ -233,6 +243,7 @@ class MathOptions {
     MathSize? sizeUnderTextStyle,
     FontOptions? textFontOptions,
     FontOptions? mathFontOptions,
+    TextDirection? textDirection,
     // double maxSize,
     // num minRuleThickness,
   }) =>
@@ -244,6 +255,7 @@ class MathOptions {
         sizeUnderTextStyle: sizeUnderTextStyle ?? this.sizeUnderTextStyle,
         textFontOptions: textFontOptions ?? this.textFontOptions,
         mathFontOptions: mathFontOptions ?? this.mathFontOptions,
+        textDirection: textDirection ?? this.textDirection,
         // maxSize: maxSize ?? this.maxSize,
         // minRuleThickness: minRuleThickness ?? this.minRuleThickness,
       );
@@ -269,6 +281,9 @@ class MathOptions {
     if (partialOptions.mathFontOptions != null) {
       res = res.withMathFont(partialOptions.mathFontOptions!);
     }
+    if (partialOptions.textDirection != null) {
+      res = res.copyWith(textDirection: partialOptions.textDirection);
+    }
     return res;
   }
 }
@@ -292,6 +307,9 @@ class OptionsDiff {
   /// Override math-mode font.
   final FontOptions? mathFontOptions;
 
+  /// Override text direction.
+  final TextDirection? textDirection;
+
   const OptionsDiff({
     this.style,
     this.color,
@@ -299,6 +317,7 @@ class OptionsDiff {
     // this.phantom,
     this.textFontOptions,
     this.mathFontOptions,
+    this.textDirection,
   });
 
   /// Whether this diff has no effect.
@@ -307,7 +326,8 @@ class OptionsDiff {
       color == null &&
       size == null &&
       textFontOptions == null &&
-      mathFontOptions == null;
+      mathFontOptions == null &&
+      textDirection == null;
 
   /// Strip the style change.
   OptionsDiff removeStyle() {
@@ -317,6 +337,7 @@ class OptionsDiff {
       size: this.size,
       textFontOptions: this.textFontOptions,
       mathFontOptions: this.mathFontOptions,
+      textDirection: this.textDirection,
     );
   }
 
@@ -328,6 +349,7 @@ class OptionsDiff {
       size: this.size,
       style: this.style,
       textFontOptions: this.textFontOptions,
+      textDirection: this.textDirection,
     );
   }
 }

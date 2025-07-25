@@ -21,6 +21,10 @@ const equations = [
   \nabla\times\vec{H} = \vec{J}_f + \frac{\partial\vec{D}}{\partial t} 
 \end{array}\right.'''
   ],
+  [
+    'Arabic text example',
+    r'\textar{الانطلاق المتوسط} = \frac{\textar{المسافة المقطوعة}}{\textar{الزمن}}'
+  ],
 ];
 
 class EquationsPage extends StatelessWidget {

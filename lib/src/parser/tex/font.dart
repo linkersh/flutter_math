@@ -180,3 +180,24 @@ const texTextFontOptions = {
   '\\textup': PartialFontOptions(fontShape: FontStyle.normal),
   '\\textar': PartialFontOptions(fontFamily: 'NotoNaskhArabic', fontShape: FontStyle.normal),
 };
+
+/// Detects if the given text contains Arabic characters
+bool isArabicText(String text) {
+  for (int i = 0; i < text.length; i++) {
+    final codeUnit = text.codeUnitAt(i);
+    // Arabic Unicode blocks:
+    // U+0600–U+06FF (Arabic)
+    // U+0750–U+077F (Arabic Supplement)  
+    // U+08A0–U+08FF (Arabic Extended-A)
+    // U+FB50–U+FDFF (Arabic Presentation Forms-A)
+    // U+FE70–U+FEFF (Arabic Presentation Forms-B)
+    if ((codeUnit >= 0x0600 && codeUnit <= 0x06FF) ||
+        (codeUnit >= 0x0750 && codeUnit <= 0x077F) ||
+        (codeUnit >= 0x08A0 && codeUnit <= 0x08FF) ||
+        (codeUnit >= 0xFB50 && codeUnit <= 0xFDFF) ||
+        (codeUnit >= 0xFE70 && codeUnit <= 0xFEFF)) {
+      return true;
+    }
+  }
+  return false;
+}

@@ -42,8 +42,21 @@ GreenNode _textHandler(TexParser parser, FunctionContext context) {
   final body = parser.parseArgNode(mode: Mode.text, optional: false)!;
   final fontOptions = texTextFontOptions[context.funcName];
   if (fontOptions == null) return body;
+  
+  // For Arabic text, we need to set RTL text direction
+  OptionsDiff optionsDiff;
+  if (context.funcName == '\\textar') {
+    // For \textar command, explicitly set RTL direction and Arabic font
+    optionsDiff = OptionsDiff(
+      textFontOptions: fontOptions,
+      textDirection: TextDirection.rtl,
+    );
+  } else {
+    optionsDiff = OptionsDiff(textFontOptions: fontOptions);
+  }
+  
   return StyleNode(
-    optionsDiff: OptionsDiff(textFontOptions: fontOptions),
+    optionsDiff: optionsDiff,
     children: body.expandEquationRow(),
   );
 }
