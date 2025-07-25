@@ -47,6 +47,7 @@ class TexSymbolConfig {
   });
 }
 
+const naskhFont = FontOptions(fontFamily: 'Naskh');
 const mainrm = FontOptions();
 const amsrm = FontOptions(fontFamily: 'AMS');
 const mathdefault = FontOptions(
@@ -2184,6 +2185,96 @@ const texSymbolCommandConfigs = {
     '\\^': TexSymbolConfig('\u02C6'),
     '\\~': TexSymbolConfig('\u02DC'),
     '\\H': TexSymbolConfig('\u02DD'),
+    'ا': TexSymbolConfig('ا', font: naskhFont), // Alef
+    'ب': TexSymbolConfig('ب', font: naskhFont), // Ba
+    'ت': TexSymbolConfig('ت', font: naskhFont), // Ta
+    'ث': TexSymbolConfig('ث', font: naskhFont), // Tha
+    'ج': TexSymbolConfig('ج', font: naskhFont), // Jeem
+    'ح': TexSymbolConfig('ح', font: naskhFont), // Ha
+    'خ': TexSymbolConfig('خ', font: naskhFont), // Kha
+    'د': TexSymbolConfig('د', font: naskhFont), // Dal
+    'ذ': TexSymbolConfig('ذ', font: naskhFont), // Thal
+    'ر': TexSymbolConfig('ر', font: naskhFont), // Ra
+    'ز': TexSymbolConfig('ز', font: naskhFont), // Zain
+    'س': TexSymbolConfig('س', font: naskhFont), // Seen
+    'ش': TexSymbolConfig('ش', font: naskhFont), // Sheen
+    'ص': TexSymbolConfig('ص', font: naskhFont), // Sad
+    'ض': TexSymbolConfig('ض', font: naskhFont), // Dad
+    'ط': TexSymbolConfig('ط', font: naskhFont), // Ta
+    'ظ': TexSymbolConfig('ظ', font: naskhFont), // Dha
+    'ع': TexSymbolConfig('ع', font: naskhFont), // Ain
+    'غ': TexSymbolConfig('غ', font: naskhFont), // Ghain
+    'ف': TexSymbolConfig('ف', font: naskhFont), // Fa
+    'ق': TexSymbolConfig('ق', font: naskhFont), // Qaf
+    'ك': TexSymbolConfig('ك', font: naskhFont), // Kaf
+    'ل': TexSymbolConfig('ل', font: naskhFont), // Lam
+    'م': TexSymbolConfig('م', font: naskhFont), // Meem
+    'ن': TexSymbolConfig('ن', font: naskhFont), // Noon
+    'ه': TexSymbolConfig('ه', font: naskhFont), // Ha
+    'و': TexSymbolConfig('و', font: naskhFont), // Waw
+    'ي': TexSymbolConfig('ي', font: naskhFont), // Ya
+
+// --- Letters with Hamza & Variants ---
+    'ء': TexSymbolConfig('ء', font: naskhFont), // Hamza
+    'أ': TexSymbolConfig('أ', font: naskhFont), // Alef with Hamza Above
+    'ؤ': TexSymbolConfig('ؤ', font: naskhFont), // Waw with Hamza Above
+    'إ': TexSymbolConfig('إ', font: naskhFont), // Alef with Hamza Below
+    'ئ': TexSymbolConfig('ئ', font: naskhFont), // Ya with Hamza Above
+    'آ': TexSymbolConfig('آ', font: naskhFont), // Alef with Madda Above
+    'ة': TexSymbolConfig('ة', font: naskhFont), // Ta Marbuta
+    'ى': TexSymbolConfig('ى', font: naskhFont), // Alef Maqsura
+
+// --- Diacritics (Tashkeel / Harakat) ---
+    'َ': TexSymbolConfig('َ', font: naskhFont), // Fatha
+    'ً': TexSymbolConfig('ً', font: naskhFont), // Fathatan
+    'ُ': TexSymbolConfig('ُ', font: naskhFont), // Damma
+    'ٌ': TexSymbolConfig('ٌ', font: naskhFont), // Dammatan
+    'ِ': TexSymbolConfig('ِ', font: naskhFont), // Kasra
+    'ٍ': TexSymbolConfig('ٍ', font: naskhFont), // Kasratan
+    'ْ': TexSymbolConfig('ْ', font: naskhFont), // Sukun
+    'ّ': TexSymbolConfig('ّ', font: naskhFont), // Shadda
+
+// --- Ligatures (especially Lam-Alef) ---
+// While a shaping engine should handle this, mapping them is a good fallback.
+    'لا': TexSymbolConfig('لا', font: naskhFont),
+    'لأ': TexSymbolConfig('لأ', font: naskhFont),
+    'لإ': TexSymbolConfig('لإ', font: naskhFont),
+    'لآ': TexSymbolConfig('لآ', font: naskhFont),
+
+// --- Arabic-Indic Numerals ---
+    '٠': TexSymbolConfig('٠', font: naskhFont), // 0
+    '١': TexSymbolConfig('١', font: naskhFont), // 1
+    '٢': TexSymbolConfig('٢', font: naskhFont), // 2
+    '٣': TexSymbolConfig('٣', font: naskhFont), // 3
+    '٤': TexSymbolConfig('٤', font: naskhFont), // 4
+    '٥': TexSymbolConfig('٥', font: naskhFont), // 5
+    '٦': TexSymbolConfig('٦', font: naskhFont), // 6
+    '٧': TexSymbolConfig('٧', font: naskhFont), // 7
+    '٨': TexSymbolConfig('٨', font: naskhFont), // 8
+    '٩': TexSymbolConfig('٩', font: naskhFont), // 9
+
+// --- Arabic Punctuation & Symbols ---
+    '،': TexSymbolConfig('،', font: naskhFont), // Comma
+    '؛': TexSymbolConfig('؛', font: naskhFont), // Semicolon
+    '؟': TexSymbolConfig('؟', font: naskhFont), // Question Mark
+    '٪': TexSymbolConfig('٪', font: naskhFont), // Percent Sign
+    '٫': TexSymbolConfig('٫', font: naskhFont), // Decimal Separator
+    '٬': TexSymbolConfig('٬', font: naskhFont), // Thousands Separator
+    '٭': TexSymbolConfig('٭', font: naskhFont), // Asterisk
+    'ـ': TexSymbolConfig('ـ',
+        font: naskhFont), // Tatweel (Kashida for justification)
+    '﷼': TexSymbolConfig('﷼', font: naskhFont), // Rial Sign
+
+// --- Extended Arabic Characters (for Persian, Urdu, etc.) ---
+    'پ': TexSymbolConfig('پ', font: naskhFont), // Peh
+    'چ': TexSymbolConfig('چ', font: naskhFont), // Tcheh
+    'ژ': TexSymbolConfig('ژ', font: naskhFont), // Jeh
+    'ڤ': TexSymbolConfig('ڤ', font: naskhFont), // Veh
+    'گ': TexSymbolConfig('گ', font: naskhFont), // Gaf
+    'ڭ': TexSymbolConfig('ڭ', font: naskhFont), // Ng
+    'ی': TexSymbolConfig('ی', font: naskhFont), // Farsi Yeh
+    'ک': TexSymbolConfig('ک', font: naskhFont), // Farsi/Urdu Kaf
+
     ...extraTexTextSymbolCommandConfigs
   },
 };
